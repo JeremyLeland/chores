@@ -1,0 +1,14 @@
+3/3/2026:
+
+Goal is to create a Web App that can be used to track how long it has been since a chore was last done.
+
+App will show a list of chores and how long since each one was last done
+  - Can add new chores, edit existing chores
+  - Set a chore to done Now
+    - Or edit to be a specific date in the past?
+  - Sorted by how long since last done
+
+Planning to just use localStorage for now to avoid database issues
+  - Could potentially explore keeping a database, multiple users, etc in future
+    - But I really just need this for me, and don't care as much about that stuff :-P
+
