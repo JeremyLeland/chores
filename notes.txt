@@ -1,3 +1,23 @@
+4/16:
+
+DONE: Try to edit existing chores
+  - Use contenteditable="true"
+  - Easy to edit table, but how do I get back to list of chores to save?
+  - Maybe I should build DOM instead of HTML, then each td can reference the object it should update
+
+Click lastDone to set to now
+  - Next: How to set to another time? Is there a calendar control built in?
+
+Sort by Last Done by default
+  - Sort by Chore by clicking? 
+    - Not sure I care about this, but maybe with a long list
+
+Add and Delete chores
+  - "New" button at bottom of list
+    - Or top of list, in case it's a long list?
+    - Next to Import, Export buttons?
+  - Delete would need to be a button for every row (boo, ugly)
+
 3/3/2026:
 
 Goal is to create a Web App that can be used to track how long it has been since a chore was last done.
