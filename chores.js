@@ -6,19 +6,33 @@ const chores = [
   { label: 'Living Room Ruggable', lastDone: Date.now() - 4000000000 },
 ];
 
-let html = '<table><thead><tr><th>Last Done</th><th>Chore</th></tr></thead><tbody>';
+const thead = document.createElement( 'thead' );
+thead.innerHTML = '<tr><th>Last Done</th><th>Chore</th></tr>';
+
+const tbody = document.createElement( 'tbody' );
 
 chores.forEach( chore => {
   const lastDone = new Date( chore.lastDone );
-
   const daysAgo = ( Date.now() - lastDone ) / 86400000;
 
   const red = Math.min( 256, 7 * daysAgo );
   const green = 7 * 256 / Math.max( 0.01, daysAgo );
 
-  html += `<tr><td style="background: rgb( ${ red }, ${ green }, 0 )">${ lastDone.toLocaleDateString() }</td><td>${ chore.label }</td></tr>`;
+  const lastDoneTD = document.createElement( 'td' );
+  lastDoneTD.style.background = `rgb( ${ red }, ${ green }, 0 )`;
+  lastDoneTD.innerText = lastDone.toLocaleDateString();
+
+  const labelTD = document.createElement( 'td' );
+  labelTD.contentEditable = true;
+  labelTD.innerText = chore.label;
+
+  const row = document.createElement( 'tr' );
+  row.appendChild( lastDoneTD );
+  row.appendChild( labelTD );
+  tbody.appendChild( row );
 } );
 
-html += '</tbody></table>';
-
-const table = document.getElementById( 'chores' ).innerHTML = html;
+const table = document.createElement( 'table' );
+table.appendChild( thead );
+table.appendChild( tbody );
+document.body.appendChild( table );
