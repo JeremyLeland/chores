@@ -1,3 +1,15 @@
+4/20:
+
+Add and Delete chores
+  - how to update table?
+  - Setting the innerHtml still feels kind of elegent
+    - Clearly updated everything at once, without dealing with various objects hanging around
+    - Issue before was knowing which parts of chores object to edit
+      - if we use an index, it can become outdated as objects are added and deleted
+      - give everything a unique key from beginning?
+        - we're sort of doing this implicitly now by directly linking to objects
+
+
 4/16:
 
 DONE: Try to edit existing chores
@@ -17,6 +29,10 @@ Add and Delete chores
     - Or top of list, in case it's a long list?
     - Next to Import, Export buttons?
   - Delete would need to be a button for every row (boo, ugly)
+
+Import/Export/Clear
+  - Buttons near top/title
+  - Could also Import empty string for clear (if I want to save space)
 
 3/3/2026:
 

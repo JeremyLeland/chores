@@ -16,7 +16,7 @@ const chores = JSON.parse( localStorage.getItem( StateKey ) ) ?? [
 ];
 
 const thead = document.createElement( 'thead' );
-thead.innerHTML = '<tr><th>Last Done</th><th>Chore</th></tr>';
+thead.innerHTML = '<tr><th>When</th><th>What</th></tr>';
 
 const tbody = document.createElement( 'tbody' );
 
