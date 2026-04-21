@@ -78,8 +78,8 @@ function getInnerHtml( items ) {
 
   html += '<tbody>';
 
-  // Reverse sort by date
-  const sorted = Object.entries( items ).sort( ( [ , a ], [ , b ] ) => b.lastDone?.localeCompare( a.lastDone ) );
+  // Sort by date (oldest first, with "never" at top)
+  const sorted = Object.entries( items ).sort( ( [ , a ], [ , b ] ) => a.lastDone ? b.lastDone ? a.lastDone.localeCompare( b.lastDone ) : 1 : -1 );
 
   sorted.forEach( ( [ id, item ] ) => {
     html += `<tr><td><input type="date" style="background: ${ getColorForDate( item.lastDone ) }" value="${ item.lastDone }" data-id="${ id }"></td>`;
