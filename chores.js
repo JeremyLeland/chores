@@ -1,9 +1,20 @@
+//
+// State
+//
 const StateKey = 'lastDone_chores';
 
-// TODO: Would it make more sense to have dictionary of label to date?
-//        - what if we try to set two labels to the same? (could auto append a 2 or something)
+function loadState() {
+  return JSON.parse( localStorage.getItem( StateKey ) );
+}
 
-const chores = JSON.parse( localStorage.getItem( StateKey ) ) ?? [
+function saveState() {
+  localStorage.setItem( StateKey, JSON.stringify( items ) );
+}
+
+const items = loadState() ?? {
+  [ crypto.randomUUID() ]: { lastDone: '2026-04-05', label: 'Kitchen Chair Covers' },
+  [ crypto.randomUUID() ]: { lastDone: '2026-04-01', label: 'Couch Covers' },
+}; /*[
   { label: 'Kitchen Chair Covers' },
   { label: 'Couch Covers' },
   { label: 'Kitchen Ruggables' },
@@ -13,65 +24,67 @@ const chores = JSON.parse( localStorage.getItem( StateKey ) ) ?? [
   { label: 'JBL Ruggable' },
   { label: 'Olivia Bedding' },
   { label: 'Olivia Ruggable' },
-];
+];*/
 
-const thead = document.createElement( 'thead' );
-thead.innerHTML = '<tr><th>When</th><th>What</th></tr>';
-
-const tbody = document.createElement( 'tbody' );
-
-chores.forEach( chore => {
-  const lastDoneTD = document.createElement( 'td' );
-
-  const lastDoneInput = document.createElement( 'input' );
-  lastDoneInput.type = 'date';
-  lastDoneTD.appendChild( lastDoneInput );
-
-  updateLastDone( lastDoneInput, chore );
-
-  lastDoneInput.addEventListener( 'change', _ => {
-    chore.lastDone = lastDoneInput.value;
-    updateLastDone( lastDoneInput, chore );
-    saveState();
-  } );
-
-  const labelTD = document.createElement( 'td' );
-  labelTD.contentEditable = true;
-  labelTD.innerText = chore.label;
-  labelTD.addEventListener( 'input', _ => {
-    chore.label = labelTD.innerText;
-    saveState();
-  } );
-
-  const row = document.createElement( 'tr' );
-  row.appendChild( lastDoneTD );
-  row.appendChild( labelTD );
-  tbody.appendChild( row );
-} );
-
+//
+// Table
+//
 const table = document.createElement( 'table' );
-table.appendChild( thead );
-table.appendChild( tbody );
 document.body.appendChild( table );
 
-function updateLastDone( input, chore ) {
-  if ( chore.lastDone ) {
-    const lastDone = new Date( chore.lastDone );
+function update() {
+  table.innerHTML = getInnerHtml( items );
+  saveState();
+}
+update();
+
+table.addEventListener( 'change', e => {
+  if ( e.target.tagName == 'INPUT' ) {
+    items[ e.target.dataset.id ].lastDone = e.target.value;
+    update();
+  }
+} );
+
+table.addEventListener( 'focusout', e => {
+  if ( e.target.tagName == 'TD' ) {
+    items[ e.target.dataset.id ].label = e.target.innerText;
+    update();
+  }
+} );
+
+//
+// Build table from items
+//
+function getInnerHtml( items ) {
+  let html = '<thead><tr><th>When</th><th>What</th></tr></thead>';
+
+  html += '<tbody>';
+
+  const sorted = Object.entries( items ).sort( ( [ , a ], [ , b ] ) => a.lastDone.localeCompare( b.lastDone ) );
+
+  sorted.forEach( ( [ id, item ] ) => {
+    html += `<tr><td><input type="date" style="background: ${ getColorForDate( item.lastDone ) }" value="${ item.lastDone }" data-id="${ id }"></td>`;
+
+    html += `<td contenteditable data-id="${ id }">${ item.label }</td></tr>`;
+  } );
+
+  html += '</tbody>';
+
+  return html;
+}
+
+function getColorForDate( date ) {
+  if ( date ) {
+    const lastDone = new Date( date );
     const MillisecondPerDay = 1000 * 60 * 60 * 24;
     const daysAgo = ( Date.now() - lastDone ) / MillisecondPerDay;
 
     const red = Math.min( 256, 7 * daysAgo );
     const green = 7 * 256 / Math.max( 0.01, daysAgo );
 
-    input.style.background = `rgb( ${ red }, ${ green }, 0 )`;
-    input.value = chore.lastDone
+    return `rgb( ${ red }, ${ green }, 0 )`;
   }
   else {
-    input.style.background = 'red';
-    // input.innerText = 'Never!';
+    return 'red';
   }
-}
-
-function saveState() {
-  localStorage.setItem( StateKey, JSON.stringify( chores ) );
 }
