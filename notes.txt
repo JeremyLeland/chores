@@ -1,3 +1,25 @@
+4/21:
+
+Buttons for new item, clear list, import, and export
+  - Chrome has undefined items at top?
+    - Something about my ternary being evaluated differently?
+  - Safari on iOS isn't adding new items
+    - Does this repro on Safari for mac?
+      - Yes. Thank goodness.
+
+For reference, the old chores I had:
+/*[
+  { label: 'Kitchen Chair Covers' },
+  { label: 'Couch Covers' },
+  { label: 'Kitchen Ruggables' },
+  { label: 'Front Room Ruggable' },
+  { label: 'Living Room Ruggable' },
+  { label: 'JBL Bedding' },
+  { label: 'JBL Ruggable' },
+  { label: 'Olivia Bedding' },
+  { label: 'Olivia Ruggable' },
+];*/
+
 4/20:
 
 Add and Delete chores
@@ -8,6 +30,10 @@ Add and Delete chores
       - if we use an index, it can become outdated as objects are added and deleted
       - give everything a unique key from beginning?
         - we're sort of doing this implicitly now by directly linking to objects
+
+Redid table to generate innerHTML
+  - Actually worked pretty well
+  - Can easily sort table now, too
 
 
 4/16:
