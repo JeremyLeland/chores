@@ -7,34 +7,20 @@ function loadState() {
   return JSON.parse( localStorage.getItem( StateKey ) );
 }
 
-function saveState() {
-  localStorage.setItem( StateKey, JSON.stringify( items ) );
+function saveState( state ) {
+  localStorage.setItem( StateKey, JSON.stringify( state ) );
 }
-
-const items = loadState() ?? {
-  [ crypto.randomUUID() ]: { lastDone: '2026-04-05', label: 'Kitchen Chair Covers' },
-  [ crypto.randomUUID() ]: { lastDone: '2026-04-01', label: 'Couch Covers' },
-}; /*[
-  { label: 'Kitchen Chair Covers' },
-  { label: 'Couch Covers' },
-  { label: 'Kitchen Ruggables' },
-  { label: 'Front Room Ruggable' },
-  { label: 'Living Room Ruggable' },
-  { label: 'JBL Bedding' },
-  { label: 'JBL Ruggable' },
-  { label: 'Olivia Bedding' },
-  { label: 'Olivia Ruggable' },
-];*/
 
 //
 // Table
 //
-const table = document.createElement( 'table' );
-document.body.appendChild( table );
+let items = loadState() ?? {};
+
+const table = document.getElementById( 'table' );
 
 function update() {
   table.innerHTML = getInnerHtml( items );
-  saveState();
+  saveState( items );
 }
 update();
 
@@ -53,6 +39,38 @@ table.addEventListener( 'focusout', e => {
 } );
 
 //
+// Other UI
+//
+
+const buttonActions = {
+  'new': () => {
+    items[ crypto.randomUUID() ] = {};
+    update();
+  },
+  'clear': () => {
+    items = {};
+    update();
+  },
+  'import': () => {
+    const parsed = JSON.parse( prompt() );
+    if ( parsed ) {
+      items = parsed;
+      update();
+    }
+    else {
+      // TODO: warn about invalid input? try again?
+    }
+  },
+  'export': () => {
+    alert( JSON.stringify( items ) );
+  }
+}
+
+for ( const id in buttonActions ) {
+  document.getElementById( id ).addEventListener( 'click', buttonActions[ id ] );
+}
+
+//
 // Build table from items
 //
 function getInnerHtml( items ) {
@@ -60,7 +78,8 @@ function getInnerHtml( items ) {
 
   html += '<tbody>';
 
-  const sorted = Object.entries( items ).sort( ( [ , a ], [ , b ] ) => a.lastDone.localeCompare( b.lastDone ) );
+  // Reverse sort by date
+  const sorted = Object.entries( items ).sort( ( [ , a ], [ , b ] ) => b.lastDone?.localeCompare( a.lastDone ) );
 
   sorted.forEach( ( [ id, item ] ) => {
     html += `<tr><td><input type="date" style="background: ${ getColorForDate( item.lastDone ) }" value="${ item.lastDone }" data-id="${ id }"></td>`;
