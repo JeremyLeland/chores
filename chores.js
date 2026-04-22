@@ -34,17 +34,27 @@ itemsUpdated();
 
 table.addEventListener( 'change', e => {
   if ( e.target.tagName == 'INPUT' ) {
-    items[ e.target.dataset.id ].lastDone = e.target.value;
+    const id = e.target.parentElement.parentElement.dataset.id;   // get from <tr>
+    items[ id ].lastDone = e.target.value;
     itemsUpdated();
   }
 } );
 
 table.addEventListener( 'focusout', e => {
   if ( e.target.tagName == 'TD' ) {
-    items[ e.target.dataset.id ].label = e.target.innerText;
+    const id = e.target.parentElement.dataset.id;   // get from <tr>
+    items[ id ].label = e.target.innerText;
     itemsUpdated();
   }
 } );
+
+table.addEventListener( 'click', e => {
+  if ( e.target.tagName == 'BUTTON' ) {
+    const id = e.target.parentElement.parentElement.dataset.id;   // get from <tr>
+    delete items[ id ];
+    itemsUpdated();
+  }
+})
 
 //
 // Other UI
@@ -83,7 +93,7 @@ for ( const id in buttonActions ) {
 // Build table from items
 //
 function getInnerHtml( items ) {
-  let html = '<thead><tr><th>When</th><th>What</th></tr></thead>';
+  let html = '<thead><tr><th>When</th><th style="min-width: 150px;">What</th></tr></thead>';
 
   html += '<tbody>';
 
@@ -91,9 +101,9 @@ function getInnerHtml( items ) {
   const sorted = Object.entries( items ).sort( ( [ , a ], [ , b ] ) => a.lastDone ? b.lastDone ? a.lastDone.localeCompare( b.lastDone ) : 1 : -1 );
 
   sorted.forEach( ( [ id, item ] ) => {
-    html += `<tr><td><input type="date" style="background: ${ getColorForDate( item.lastDone ) }" value="${ item.lastDone }" data-id="${ id }"></td>`;
+    html += `<tr data-id="${ id }"><td><input type="date" style="background: ${ getColorForDate( item.lastDone ) }" value="${ item.lastDone }"></td>`;
 
-    html += `<td contenteditable data-id="${ id }">${ item.label }</td></tr>`;
+    html += `<td contenteditable>${ item.label }</td><td><button>❌</button></td></tr>`;
   } );
 
   html += '</tbody>';
