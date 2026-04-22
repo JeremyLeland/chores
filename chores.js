@@ -17,7 +17,11 @@ function saveState( state ) {
 let items = loadState() ?? {};
 
 function newItem() {
-  items[ Date.now() ] = {};
+  // use Date.now() for unique keys
+  //   - crypto.randomUUID() requires secure context, made iOS testing harder
+  // start with empty text so we can just start typing after click/tap
+  //   - don't need to highlight 'undefined' or 'new' first, which is awkward on mobile
+  items[ Date.now() ] = { label: '' };
 }
 
 const table = document.getElementById( 'table' );
