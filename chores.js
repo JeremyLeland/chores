@@ -16,25 +16,29 @@ function saveState( state ) {
 //
 let items = loadState() ?? {};
 
+function newItem() {
+  items[ Date.now() ] = {};
+}
+
 const table = document.getElementById( 'table' );
 
-function update() {
+function itemsUpdated() {
   table.innerHTML = getInnerHtml( items );
   saveState( items );
 }
-update();
+itemsUpdated();
 
 table.addEventListener( 'change', e => {
   if ( e.target.tagName == 'INPUT' ) {
     items[ e.target.dataset.id ].lastDone = e.target.value;
-    update();
+    itemsUpdated();
   }
 } );
 
 table.addEventListener( 'focusout', e => {
   if ( e.target.tagName == 'TD' ) {
     items[ e.target.dataset.id ].label = e.target.innerText;
-    update();
+    itemsUpdated();
   }
 } );
 
@@ -44,21 +48,22 @@ table.addEventListener( 'focusout', e => {
 
 const buttonActions = {
   'new': () => {
-    items[ crypto.randomUUID() ] = {};
-    update();
+    newItem();
+    itemsUpdated();
   },
   'clear': () => {
     items = {};
-    update();
+    itemsUpdated();
   },
   'import': () => {
     const parsed = JSON.parse( prompt() );
     if ( parsed ) {
       items = parsed;
-      update();
+      itemsUpdated();
     }
     else {
-      // TODO: warn about invalid input? try again?
+      console.warn( 'Invalid import, ignoring' );
+      // TODO: warn user about invalid input? try again?
     }
   },
   'export': () => {

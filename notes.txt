@@ -6,6 +6,14 @@ Buttons for new item, clear list, import, and export
   - Safari on iOS isn't adding new items
     - Does this repro on Safari for mac?
       - Yes. Thank goodness.
+      - Crypto.randomUUID() is undefined. 
+        - Damn, that was so elegant, too. Fucking Safari.
+        - Actually, it should work on https connection
+          - Lame for testing, but maybe ok if deployed on github.io
+    - Deployed to github.io, can test everything now
+      - Could also make a polyfill for randomUUID so I can test more easily?
+        - have it use the current time in millis if randomUUI is not available?
+        - Guess I could do this anyway
 
 For reference, the old chores I had:
 /*[
