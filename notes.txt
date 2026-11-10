@@ -1,3 +1,10 @@
+11/9:
+  - Want to make colors better (yellow in between)
+    - Maybe use HSL for this?
+      - Hue of 120deg looks green, hue of 0deg is red, passes through yellow and orange
+  - Make red be two months and yellow one month
+    - Better spread of colors than everything seeming to immediately go red
+
 4/21:
 
 Buttons for new item, clear list, import, and export
